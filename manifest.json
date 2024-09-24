@@ -1,5 +1,5 @@
 {
-  "name": "New Plugin",
+  "name": "Mini Map",
   "id": "1402728174755846776",
   "api": "1.0.0",
   "main": "dist/code.js",
