@@ -3,7 +3,11 @@ const FRAME_SIZE = 262;
 
 function uiMessageHandler(message) {
   console.log('Message from UI:', message);
-  // Fetch UI messages
+  const { type, data } = message;
+  if (type === 'CHANGE_RELATIVE_SCALE') {
+    const { value } = data;
+    updateMap(value);
+  }
 }
 
 function getNodes() {
@@ -49,7 +53,7 @@ function calcNodesPreview(nodes, scale) {
   });
 }
 
-function updateMap() {
+function updateMap(relativeScale = false) {
   const nodes = getNodes();
   const corners = getMapCorners(nodes);
   const scale = getScale(corners);

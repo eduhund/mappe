@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/ui.css';
+import { Switch } from 'antd';
 
 function App() {
   const mapRef = useRef(null);
@@ -10,6 +11,12 @@ function App() {
   ]);
 
   const [view, setView] = useState({ left: 0, top: 0, width: 0, height: 0 });
+  const [relative, setRelative] = useState(false);
+
+  function relativeScaleSwitchHandler() {
+    setRelative(!relative);
+    parent.postMessage({ pluginMessage: { type: 'CHANGE_RELATIVE_SCALE', data: { value: !relative } } }, '*');
+  }
 
   useEffect(() => {
     const canvas = mapRef.current;
@@ -42,10 +49,16 @@ function App() {
   }, []);
 
   return (
-    <div id="mapContainer">
-      <div id="currentView" style={view}></div>
-      <canvas id="map" ref={mapRef} width="262" height="262"></canvas>;
-    </div>
+    <>
+      <div id="mapContainer">
+        <div id="currentView" style={view}></div>
+        <canvas id="map" ref={mapRef} width="262" height="262"></canvas>
+      </div>
+      <label id="relativeScaleLabel" htmlFor="relativeScale">
+        <Switch id="relativeScale" size="small" checked={relative} onChange={relativeScaleSwitchHandler} />
+        Relative scale
+      </label>
+    </>
   );
 }
 

@@ -17,3 +17,19 @@ body {
   border-radius: 4px;
   transition: left 0.1s ease, top 0.1s ease, width 0.1s ease, height 0.1s ease;
 }
+
+#relativeScaleLabel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px 8px;
+  display: flex;
+  vertical-align: middle;
+  gap: 4px;
+  opacity: 0.4;
+}
+
+#relativeScaleLabel:hover {
+  cursor: pointer;
+  opacity: 1;
+}
