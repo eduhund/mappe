@@ -64,6 +64,19 @@ figma.showUI(__html__, {
   height: 262,
 });
 
+function updateSelectionView() {
+  const { x, y, width, height } = figma.viewport.bounds;
+  const scale = 0.001;
+  const data = {
+    left: Math.ceil((x + MAX_SPACE / 2) * scale),
+    top: Math.ceil((y + MAX_SPACE / 2) * scale),
+    width: Math.round(width * scale) || 1,
+    height: Math.round(height * scale) || 1,
+  };
+  figma.ui.postMessage({ type: 'updateSelectionView', data });
+}
+
 updateMap();
+setInterval(updateSelectionView, 100);
 
 figma.ui.onmessage = uiMessageHandler;

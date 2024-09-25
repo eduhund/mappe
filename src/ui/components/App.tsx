@@ -9,6 +9,8 @@ function App() {
     { id: 'rect2', x: 2, y: 1, width: 10, height: 15 },
   ]);
 
+  const [view, setView] = useState({ left: 0, top: 0, width: 0, height: 0 });
+
   useEffect(() => {
     const canvas = mapRef.current;
     const ctx = canvas.getContext('2d');
@@ -16,8 +18,7 @@ function App() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     frames.forEach(({ x, y, width, height }) => {
-      console.log(x, y, width, height);
-      ctx.fillStyle = 'black';
+      ctx.fillStyle = '#666666';
       ctx.fillRect(x, y, width, height);
     });
   }, [frames]);
@@ -29,6 +30,10 @@ function App() {
       if (type === 'updateMap') {
         setFrames(data);
       }
+
+      if (type === 'updateSelectionView') {
+        setView({ ...view, ...data });
+      }
     };
 
     window.addEventListener('message', handleMessage);
@@ -36,7 +41,12 @@ function App() {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
-  return <canvas id="map" ref={mapRef} width="262" height="262"></canvas>;
+  return (
+    <div id="mapContainer">
+      <div id="currentView" style={view}></div>
+      <canvas id="map" ref={mapRef} width="262" height="262"></canvas>;
+    </div>
+  );
 }
 
 export default App;
