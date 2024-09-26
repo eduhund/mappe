@@ -35,8 +35,27 @@ function setIsRelativeScale(value) {
   isRelativeScale = value || false;
 }
 
-function getNodes() {
-  return figma.currentPage.children;
+function getNodes(root = figma.currentPage) {
+  const result = [];
+
+  function traverseAndFilter(items, { rX, rY }) {
+    items.forEach((item) => {
+      const x = rX + item.x;
+      const y = rY + item.y;
+
+      result.push(item);
+      if (item['type'] === 'SECTION' && Array.isArray(item.children)) {
+        traverseAndFilter(item.children, { rX: x, rY: y });
+      } else {
+        item.setPluginData('absolutePositionX', String(x));
+        item.setPluginData('absolutePositionY', String(y));
+      }
+    });
+  }
+
+  traverseAndFilter(root.children, { rX: 0, rY: 0 });
+
+  return result;
 }
 
 function setMapCorners(nodes) {
@@ -49,6 +68,9 @@ function setMapCorners(nodes) {
   let [x1, y1, x2, y2] = [0, 0, 0, 0];
 
   nodes.forEach((node) => {
+    if (node.getPluginData('absolutePosition')) {
+      return;
+    }
     const { x, y, width, height } = node;
     const xx = x + width;
     const yy = y + height;
@@ -84,11 +106,14 @@ function getShift(x, y) {
 function calcNodesPreview(nodes) {
   const calcNodes = {};
   nodes.forEach((node) => {
-    const { id, x, y, width, height } = node;
+    const { id, x, y, width, height, type } = node;
+    const aX = Number(node.getPluginData('absolutePositionX') || 0);
+    const aY = Number(node.getPluginData('absolutePositionY') || 0);
 
-    const [shiftX, shiftY] = getShift(x, y);
+    const [shiftX, shiftY] = getShift(aX || x, aY || y);
 
     calcNodes[id] = {
+      type,
       x: Math.ceil(shiftX * scale),
       y: Math.ceil(shiftY * scale),
       width: Math.round(width * scale) || 1,
