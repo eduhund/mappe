@@ -118,6 +118,8 @@ function updateSelectionView() {
 }
 
 updateMap();
-setInterval(updateSelectionView, 100);
 
+figma.on('currentpagechange', updateMap);
 figma.ui.onmessage = uiMessageHandler;
+
+setInterval(updateSelectionView, 100);
