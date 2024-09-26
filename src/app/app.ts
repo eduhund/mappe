@@ -65,10 +65,13 @@ function setMapCorners(nodes) {
 }
 
 function getShift(x, y) {
-  const [x0, y0] = corners;
+  const [x0, y0, x1, y1] = corners;
 
-  const shiftedX = isRelativeScale ? x - x0 : x + MAX_SPACE / 2;
-  const shiftedY = isRelativeScale ? y - y0 : y + MAX_SPACE / 2;
+  const centeredX = (biggerCorner - (x1 - x0)) / 2;
+  const centeredY = (biggerCorner - (y1 - y0)) / 2;
+
+  const shiftedX = isRelativeScale ? x - x0 + centeredX : x + MAX_SPACE / 2;
+  const shiftedY = isRelativeScale ? y - y0 + centeredY : y + MAX_SPACE / 2;
 
   return [shiftedX, shiftedY];
 }
