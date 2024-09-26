@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/ui.css';
 import { Switch } from 'antd';
+import { nodesData } from '../../types';
 
 function App() {
   const mapRef = useRef(null);
 
-  const [frames, setFrames] = useState([
-    { id: 'rect1', x: 50, y: 50, width: 200, height: 100 },
-    { id: 'rect2', x: 2, y: 1, width: 10, height: 15 },
-  ]);
+  const [frames, setFrames] = useState<nodesData | null>(null);
 
   const [view, setView] = useState({ left: 0, top: 0, width: 0, height: 0 });
   const [relative, setRelative] = useState(false);
@@ -24,10 +22,12 @@ function App() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    frames.forEach(({ x, y, width, height }) => {
-      ctx.fillStyle = '#666666';
-      ctx.fillRect(x, y, width, height);
-    });
+    if (frames) {
+      Object.values(frames).forEach(({ x, y, width, height }) => {
+        ctx.fillStyle = '#666666';
+        ctx.fillRect(x, y, width, height);
+      });
+    }
   }, [frames]);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ function App() {
       const { type, data } = event.data.pluginMessage;
 
       if (type === 'updateMap') {
-        setFrames(data);
+        setFrames({ ...frames, ...data });
       }
 
       if (type === 'updateSelectionView') {

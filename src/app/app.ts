@@ -77,19 +77,21 @@ function getShift(x, y) {
 }
 
 function calcNodesPreview(nodes) {
-  return nodes.map((node) => {
+  const calcNodes = {};
+  nodes.forEach((node) => {
     const { id, x, y, width, height } = node;
 
     const [shiftX, shiftY] = getShift(x, y);
 
-    return {
-      id,
+    calcNodes[id] = {
       x: Math.ceil(shiftX * scale),
       y: Math.ceil(shiftY * scale),
       width: Math.round(width * scale) || 1,
       height: Math.round(height * scale) || 1,
     };
   });
+
+  return calcNodes;
 }
 
 function updateMap() {
@@ -117,9 +119,24 @@ function updateSelectionView() {
   figma.ui.postMessage({ type: 'updateSelectionView', data });
 }
 
+figma.on('currentpagechange', updateMap);
+
+figma.loadAllPagesAsync().then(() => {
+  figma.on('documentchange', (event) => {
+    const hasGeometryChange = event.documentChanges.find((change) => {
+      return (
+        change.type === 'CREATE' ||
+        change.type === 'DELETE' ||
+        (change.type === 'PROPERTY_CHANGE' &&
+          change.properties.some((prop) => ['x', 'y', 'width', 'height'].includes(prop)))
+      );
+    });
+    if (hasGeometryChange) updateMap();
+  });
+});
+
 updateMap();
 
-figma.on('currentpagechange', updateMap);
 figma.ui.onmessage = uiMessageHandler;
 
 setInterval(updateSelectionView, 100);
