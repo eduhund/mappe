@@ -20,6 +20,10 @@ function uiMessageHandler(message) {
     setIsRelativeScale(value);
     updateMap();
   }
+
+  if (type === 'INIT_RENDER') {
+    updateMap();
+  }
 }
 
 function calcScale(currentCorner) {
@@ -159,8 +163,6 @@ figma.loadAllPagesAsync().then(() => {
     if (hasGeometryChange) updateMap();
   });
 });
-
-updateMap();
 
 figma.ui.onmessage = uiMessageHandler;
 

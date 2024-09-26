@@ -74,6 +74,10 @@ function App() {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
+  useEffect(() => {
+    parent.postMessage({ pluginMessage: { type: 'INIT_RENDER' } }, '*');
+  }, []);
+
   return (
     <>
       <div id="mapContainer">
