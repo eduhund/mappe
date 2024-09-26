@@ -35,7 +35,7 @@ function App() {
       const { type, data } = event.data.pluginMessage;
 
       if (type === 'updateMap') {
-        setFrames({ ...frames, ...data });
+        setFrames(Object.assign({}, frames, data));
       }
 
       if (type === 'updateSelectionView') {

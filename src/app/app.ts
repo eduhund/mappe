@@ -7,8 +7,13 @@ let biggerCorner = MAX_SPACE;
 let scale = 0;
 let isRelativeScale = false;
 
+figma.showUI(__html__, {
+  width: 262,
+  height: 262,
+});
+
 function uiMessageHandler(message) {
-  console.log('Message from UI:', message);
+  //console.log('Message from UI:', message);
   const { type, data } = message;
   if (type === 'CHANGE_RELATIVE_SCALE') {
     const { value } = data;
@@ -101,11 +106,6 @@ function updateMap() {
   const nodesPreview = calcNodesPreview(nodes);
   figma.ui.postMessage({ type: 'updateMap', data: nodesPreview });
 }
-
-figma.showUI(__html__, {
-  width: 262,
-  height: 262,
-});
 
 function updateSelectionView() {
   const { x, y, width, height } = figma.viewport.bounds;
