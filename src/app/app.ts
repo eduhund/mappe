@@ -163,7 +163,7 @@ const { showNotify, closeNotify } = (() => {
 
 async function checkSubscription(email?: string) {
   const userId = figma.currentUser?.id || '';
-  let uri = `https://mcrprdcts.eduhund.com/api/shlow/check_subscription?user_id=${userId}`;
+  let uri = `https://mcrprdcts.eduhund.com/api/check_subscription?product_id=MPP&user_id=${userId}`;
 
   if (email) {
     uri += `&email=${email}`;
@@ -214,7 +214,7 @@ async function run() {
     return;
   }
 
-  if (false) {
+  if (result) {
     closeNotify();
     figma.ui.postMessage({
       type: 'SET_STATUS',
@@ -227,7 +227,7 @@ async function run() {
     const trialTime = 7;
     const timeRemaining = trialTime - Math.ceil(timeFromFirstRun / (24 * 60 * 60));
 
-    if (true || timeRemaining < 1) {
+    if (timeRemaining < 1) {
       showNotify(`You have reached ${trialTime} days free trial`, {
         timeout: Infinity,
         button: {
@@ -271,7 +271,6 @@ async function run() {
         onDequeue: (reason) => {
           if (reason !== 'action_button_click') {
             closeNotify();
-            figma.closePlugin();
           }
         },
       });
