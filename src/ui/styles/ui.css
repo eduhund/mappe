@@ -5,6 +5,8 @@ body {
   width: auto;
   height: auto;
 
+  overflow: hidden;
+
   font-family: Inter, Arial, sans-serif;
 }
 
@@ -20,10 +22,15 @@ body {
   transition: left 0.1s ease, top 0.1s ease, width 0.1s ease, height 0.1s ease;
 }
 
-#relativeScaleLabel {
+.mapLabel {
   position: absolute;
+  background-color: #fff;
+}
+
+#relativeScaleLabel {
   top: 0;
   right: 0;
+  opacity: 0.4;
   padding: 4px;
   padding-right: 8px;
   font-size: 13px;
@@ -31,12 +38,66 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  opacity: 0.4;
-  background-color: #fff;
   border-bottom-left-radius: 12px;
 }
 
 #relativeScaleLabel:hover {
   cursor: pointer;
   opacity: 1;
+}
+
+#buy {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 4px;
+  border-top-right-radius: 12px;
+}
+
+#buy.trialEnded {
+  top: 50%;
+  left: 50%;
+  bottom: initial;
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+}
+
+.content {
+  padding: 12px;
+  overflow-y: auto;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+footer p {
+  margin: 0;
+}
+
+.block {
+  margin-bottom: 1em;
+}
+
+.subscription_form {
+  display: flex;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.subscription_form input {
+  flex-grow: 1;
+}
+
+.email_error {
+  color: #ff6347;
+}
+
+._hidden {
+  display: none;
+}
+
+._blurred {
+  filter: blur(16px);
 }
