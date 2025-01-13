@@ -191,6 +191,7 @@ async function run() {
   figma.showUI(__html__, {
     width: 262,
     height: 262,
+    visible: false,
   });
 
   figma.ui.onmessage = uiMessageHandler;
@@ -199,10 +200,11 @@ async function run() {
     timeout: Infinity,
   });
 
-  const result = await checkSubscription();
+  const result = await (() => {
+    return new Promise((resolve) => setTimeout(() => resolve(false), 5000));
+  })(); //await checkSubscription();
 
   if (result === null) {
-    figma.ui.hide();
     showNotify('We have some problem. Please, run plugin again, or mail us: we@eduhund.com', {
       error: true,
       timeout: 5 * 1000,
@@ -213,7 +215,10 @@ async function run() {
     return;
   }
 
+  figma.ui.show();
+
   if (result) {
+    closeNotify();
     figma.ui.postMessage({
       type: 'SET_STATUS',
       data: {
@@ -222,7 +227,7 @@ async function run() {
     });
   } else {
     const timeFromFirstRun = figma?.payments?.getUserFirstRanSecondsAgo() || 0;
-    const trialTime = 7;
+    const trialTime = 0;
     const timeRemaining = trialTime - Math.ceil(timeFromFirstRun / (24 * 60 * 60));
 
     if (timeRemaining < 1) {
