@@ -200,9 +200,7 @@ async function run() {
     timeout: Infinity,
   });
 
-  const result = await (() => {
-    return new Promise((resolve) => setTimeout(() => resolve(false), 5000));
-  })(); //await checkSubscription();
+  const result = await checkSubscription();
 
   if (result === null) {
     showNotify('We have some problem. Please, run plugin again, or mail us: we@eduhund.com', {
