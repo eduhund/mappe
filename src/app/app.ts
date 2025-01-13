@@ -182,7 +182,7 @@ async function checkSubscription(email?: string) {
     const data = await response.json();
     return data?.access;
   } catch {
-    console.error('Subscribtion check error:');
+    console.error('Subscribtion check error');
     return null;
   }
 }

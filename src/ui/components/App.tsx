@@ -6,15 +6,13 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { Title, Text, Link } = Typography;
 import { nodesData } from '../../types';
 
-function Map({ navTo }) {
+function Map({ navTo, status }) {
   const mapRef = useRef(null);
 
   const [frames, setFrames] = useState<nodesData | null>(null);
 
   const [view, setView] = useState({ left: 0, top: 0, width: 0, height: 0 });
   const [relative, setRelative] = useState(true);
-
-  const [status, setStatus] = useState('trial');
 
   function relativeScaleSwitchHandler() {
     setRelative(!relative);
@@ -71,10 +69,6 @@ function Map({ navTo }) {
 
       if (type === 'updateSelectionView') {
         setView({ ...view, ...data });
-      }
-
-      if (type === 'SET_STATUS') {
-        setStatus(data.status);
       }
     };
 
@@ -228,10 +222,15 @@ function Buy({ navTo }) {
 
 function App() {
   const [page, setPage] = useState('map');
+  const [status, setStatus] = useState('trial');
 
   useEffect(() => {
     const handleMessage = (event) => {
       const { type, data } = event.data.pluginMessage;
+
+      if (type === 'SET_STATUS') {
+        setStatus(data.status);
+      }
 
       if (type === 'SET_PAGE') {
         const { page } = data;
@@ -246,7 +245,7 @@ function App() {
 
   return (
     <>
-      {page === 'map' && <Map navTo={setPage} />}
+      {page === 'map' && <Map navTo={setPage} status={status} />}
       {page === 'buy' && <Buy navTo={setPage} />}
     </>
   );

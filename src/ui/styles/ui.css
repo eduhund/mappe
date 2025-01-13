@@ -63,6 +63,7 @@ body {
 }
 
 .content {
+  height: 238px;
   padding: 12px;
   overflow-y: auto;
 }
