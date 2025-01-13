@@ -8,7 +8,6 @@ let scale = 0;
 let isRelativeScale = true;
 
 function uiMessageHandler(message) {
-  //console.log('Message from UI:', message);
   const { type, data } = message;
   if (type === 'CHANGE_RELATIVE_SCALE') {
     const { value } = data;
@@ -155,7 +154,7 @@ const { showNotify, closeNotify } = (() => {
 
   function showNotify(text: string, settings: NotificationOptions) {
     closeNotify();
-    setTimeout(() => (notify = figma.notify(text, settings)), 10);
+    setTimeout(() => (notify = figma.notify(text, settings)), 0);
   }
 
   return { showNotify, closeNotify };
@@ -177,13 +176,6 @@ async function checkSubscription(email?: string) {
     });
 
     if (response.status !== 200) {
-      showNotify('We have some problem. Please, run plugin again, or mail us: we@eduhund.com', {
-        error: true,
-        timeout: 10 * 1000,
-        onDequeue: () => {
-          figma.closePlugin();
-        },
-      });
       return null;
     }
 
@@ -191,7 +183,7 @@ async function checkSubscription(email?: string) {
     return data?.access;
   } catch {
     console.error('Subscribtion check error:');
-    figma.closePlugin();
+    return null;
   }
 }
 
@@ -199,7 +191,6 @@ async function run() {
   figma.showUI(__html__, {
     width: 262,
     height: 262,
-    visible: false,
   });
 
   figma.ui.onmessage = uiMessageHandler;
@@ -211,11 +202,18 @@ async function run() {
   const result = await checkSubscription();
 
   if (result === null) {
+    figma.ui.hide();
+    showNotify('We have some problem. Please, run plugin again, or mail us: we@eduhund.com', {
+      error: true,
+      timeout: 5 * 1000,
+      onDequeue: () => {
+        figma.closePlugin();
+      },
+    });
     return;
   }
 
   if (result) {
-    closeNotify();
     figma.ui.postMessage({
       type: 'SET_STATUS',
       data: {
@@ -299,9 +297,7 @@ async function run() {
 
   figma.on('currentpagechange', updateMap);
 
-  setInterval(updateSelectionView, 100);
-
-  figma.ui.show();
+  setInterval(updateSelectionView, 32);
 }
 
 run();
