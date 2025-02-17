@@ -191,98 +191,9 @@ async function run() {
   figma.showUI(__html__, {
     width: 262,
     height: 262,
-    visible: false,
   });
 
   figma.ui.onmessage = uiMessageHandler;
-
-  showNotify('Cheking your subscription...', {
-    timeout: Infinity,
-  });
-
-  const result = await checkSubscription();
-
-  if (result === null) {
-    showNotify('We have some problem. Please, run plugin again, or mail us: we@eduhund.com', {
-      error: true,
-      timeout: 5 * 1000,
-      onDequeue: () => {
-        figma.closePlugin();
-      },
-    });
-    return;
-  }
-
-  figma.ui.show();
-
-  if (result) {
-    closeNotify();
-    figma.ui.postMessage({
-      type: 'SET_STATUS',
-      data: {
-        status: 'full',
-      },
-    });
-  } else {
-    const timeFromFirstRun = figma?.payments?.getUserFirstRanSecondsAgo() || 0;
-    const trialTime = 0;
-    const timeRemaining = trialTime - Math.ceil(timeFromFirstRun / (24 * 60 * 60));
-
-    if (timeRemaining < 1) {
-      showNotify(`You have reached ${trialTime} days free trial`, {
-        timeout: Infinity,
-        button: {
-          text: 'Get full version',
-          action: () => {
-            figma.ui.postMessage({
-              type: 'SET_PAGE',
-              data: {
-                page: 'buy',
-              },
-            });
-          },
-        },
-        onDequeue: (reason) => {
-          if (reason !== 'action_button_click') {
-            closeNotify();
-            figma.closePlugin();
-          }
-        },
-      });
-      figma.ui.postMessage({
-        type: 'SET_STATUS',
-        data: {
-          status: 'trialEnded',
-        },
-      });
-    } else {
-      showNotify(`Welcome to MAPPE trial (${trialTime} day${trialTime > 1 ? 's' : ''} remaining)`, {
-        timeout: Infinity,
-        button: {
-          text: 'Get full version',
-          action: () => {
-            figma.ui.postMessage({
-              type: 'SET_PAGE',
-              data: {
-                page: 'buy',
-              },
-            });
-          },
-        },
-        onDequeue: (reason) => {
-          if (reason !== 'action_button_click') {
-            closeNotify();
-          }
-        },
-      });
-      figma.ui.postMessage({
-        type: 'SET_STATUS',
-        data: {
-          status: 'trial',
-        },
-      });
-    }
-  }
 
   figma.loadAllPagesAsync().then(() => {
     figma.on('documentchange', (event) => {

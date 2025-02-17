@@ -8,8 +8,5 @@
   "documentAccess": "dynamic-page",
   "editorType": ["figma"],
   "ui": "dist/ui.html",
-  "networkAccess": {
-    "allowedDomains": ["https://mcrprdcts.eduhund.com"]
-  },
-  "permissions": ["payments", "currentuser"]
+  "networkAccess": "none"
 }

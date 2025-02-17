@@ -1,7 +1,7 @@
 {
-  "name": "mini-map",
-  "version": "0.1.0",
-  "description": "Create newFigma plugin with UI faster with React and Ant",
+  "name": "mappe",
+  "version": "1.0.0",
+  "description": "Mini map for Figma",
   "license": "MIT",
   "author": {
     "name": "Roman Nebel",
